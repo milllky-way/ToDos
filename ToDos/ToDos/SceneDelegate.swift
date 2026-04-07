@@ -20,11 +20,5 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = ViewController()
         window?.makeKeyAndVisible()
     }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
-    }
-
-
 }
 
