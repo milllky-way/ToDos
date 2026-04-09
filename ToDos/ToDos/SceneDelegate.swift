@@ -17,7 +17,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        window?.rootViewController = ViewController()
+        let listController = ListViewController(interactor: ListBusinessLogicMock())
+        let rootViewController = UINavigationController(rootViewController: listController)
+        window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
     }
 }

@@ -89,6 +89,7 @@ extension LocalStorage: StoresLocalData {
                 entity.update(from: item)
                 try? context.save()
             }
+            completion()
         }
     }
     
@@ -102,5 +103,54 @@ extension LocalStorage: StoresLocalData {
                 try? context.save()
             }
         }
+    }
+}
+
+// MARK: - Mock
+
+final class StoresLocalDataMock: StoresLocalData {
+    var rewriteAllWasCalled = 0
+    var rewriteAllReceivedList: [ListItem] = []
+    
+    func rewriteAll(_ list: [ListItem]) {
+        rewriteAllWasCalled += 1
+        rewriteAllReceivedList = list
+    }
+    
+    var fetchAllWasCalled = 0
+    var fetchAllErrorStub: Error?
+    var fetchAllStub: [ListItem]!
+    
+    func fetchAll() throws -> [ListItem] {
+        fetchAllWasCalled += 1
+        if let error = fetchAllErrorStub {
+            throw error
+        }
+        return fetchAllStub
+    }
+    
+    var addWasCalled = 0
+    var addReceivedItem: ListItem?
+    
+    func add(_ item: ListItem) {
+        addWasCalled += 1
+        addReceivedItem = item
+    }
+    
+    var updateWasCalled = 0
+    var updateReceivedItem: ListItem?
+    
+    func update(_ item: ListItem, completion: @escaping () -> Void) {
+        updateWasCalled += 1
+        updateReceivedItem = item
+        completion()
+    }
+    
+    var deleteItemWasCalled = 0
+    var deleteItemReceivedID: Int?
+    
+    func deleteItem(with id: Int) {
+        deleteItemWasCalled += 1
+        deleteItemReceivedID = id
     }
 }
