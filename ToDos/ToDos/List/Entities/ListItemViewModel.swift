@@ -15,15 +15,17 @@ struct ListItemViewModel: Hashable, Sendable {
     let isCompleted: Bool
     
     nonisolated var hashValue: Int {
-        id.hashValue
+        id.hashValue ^ todo.hashValue ^ isCompleted.hashValue
     }
     
     nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+        hasher.combine(todo)
+        hasher.combine(isCompleted)
     }
     
     nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id && lhs.todo == rhs.todo && lhs.isCompleted == rhs.isCompleted
     }
 }
 
