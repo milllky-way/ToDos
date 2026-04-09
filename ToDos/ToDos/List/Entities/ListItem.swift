@@ -8,7 +8,7 @@
 import Foundation
 
 /// Модель задачи, приходящей по запросу (см. `FetchListService`).
-struct ListItem: Decodable {
+struct ListItem: Decodable, Equatable {
     /// Номер задачи.
     let id: Int
     /// Описание задачи.

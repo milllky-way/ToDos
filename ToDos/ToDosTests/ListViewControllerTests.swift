@@ -81,8 +81,6 @@ final class ListViewControllerTests: XCTestCase {
         XCTAssertEqual(counterLabel.text, viewModel.toolbarText)
     }
     
-    // MARK: - Test 4: updateSearchResults вызывает interactor.updateSearchResults()
-    
     func testUpdateSearchResults() {
         // Given
         let searchController = UISearchController()

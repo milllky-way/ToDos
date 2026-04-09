@@ -13,12 +13,14 @@ protocol StoresLocalData: AnyObject {
     func rewriteAll(_ list: [ListItem])
     /// Возвращает список задач.
     func fetchAll() throws -> [ListItem]
+    /// Возвращает задачу с `id` или `nil`, если такой задачи нет в хранилище.
+    func fetchItem(with id: Int) -> ListItem?
     /// Создаёт и сохраняет новую задачу.
     func add(_ item: ListItem)
     /// Обновляет данные существующей задачи.
     func update(_ item: ListItem, completion: @escaping () -> Void)
     /// Удаляет задачу с `id`.
-    func deleteItem(with id: Int)
+    func deleteItem(with id: Int, completion: @escaping () -> Void)
 }
 
 final class LocalStorage {
@@ -73,6 +75,18 @@ extension LocalStorage: StoresLocalData {
         }
     }
     
+    func fetchItem(with id: Int) -> ListItem? {
+        let request = NSFetchRequest<ListItemLocalStorageEntity>(entityName: "ListItemEntity")
+        request.predicate = NSPredicate(format: "id == %d", Int64(id))
+        request.fetchLimit = 1
+        guard let entity = try? container.viewContext.fetch(request).first else { return nil }
+        return ListItem(
+            id: Int(entity.id),
+            todo: entity.todo,
+            completed: entity.completed
+        )
+    }
+    
     func add(_ item: ListItem) {
         container.performBackgroundTask { context in
             _ = ListItemLocalStorageEntity(listItem: item, context: context)
@@ -89,11 +103,11 @@ extension LocalStorage: StoresLocalData {
                 entity.update(from: item)
                 try? context.save()
             }
-            completion()
+            DispatchQueue.main.async { completion() }
         }
     }
     
-    func deleteItem(with id: Int) {
+    func deleteItem(with id: Int, completion: @escaping () -> Void) {
         container.performBackgroundTask { context in
             let request = NSFetchRequest<ListItemLocalStorageEntity>(entityName: "ListItemEntity")
             request.predicate = NSPredicate(format: "id == %d", Int64(id))
@@ -102,6 +116,7 @@ extension LocalStorage: StoresLocalData {
                 context.delete(entity)
                 try? context.save()
             }
+            DispatchQueue.main.async { completion() }
         }
     }
 }
@@ -129,6 +144,16 @@ final class StoresLocalDataMock: StoresLocalData {
         return fetchAllStub
     }
     
+    var fetchItemWasCalled = 0
+    var fetchItemReceivedID: Int?
+    var fetchItemStub: ListItem?
+    
+    func fetchItem(with id: Int) -> ListItem? {
+        fetchItemWasCalled += 1
+        fetchItemReceivedID = id
+        return fetchItemStub
+    }
+    
     var addWasCalled = 0
     var addReceivedItem: ListItem?
     
@@ -149,8 +174,9 @@ final class StoresLocalDataMock: StoresLocalData {
     var deleteItemWasCalled = 0
     var deleteItemReceivedID: Int?
     
-    func deleteItem(with id: Int) {
+    func deleteItem(with id: Int, completion: @escaping () -> Void) {
         deleteItemWasCalled += 1
         deleteItemReceivedID = id
+        completion()
     }
 }
