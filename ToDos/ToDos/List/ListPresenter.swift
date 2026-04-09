@@ -17,7 +17,7 @@ protocol ListPresentationLogic: AnyObject {
 }
 
 final class ListPresenter: ListPresentationLogic {
-    weak var viewController: ListDisplayLogic?
+    weak var viewController: (ListDisplayLogic & ListItemViewControllerDelegate)?
     
     private let router: ListRoutes
     

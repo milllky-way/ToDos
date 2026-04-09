@@ -8,8 +8,16 @@
 import UIKit
 
 struct ListItemFactory {
-    func build(with context: Context) -> UIViewController {
-        return UIViewController(nibName: nil, bundle: nil)
+    func build(with context: Context) -> ListItemViewController {
+        let presenter = ListItemPresenter()
+        let interactor = ListItemInteractor(
+            context: context,
+            presenter: presenter,
+            localStorage: LocalStorage.shared
+        )
+        let controller = ListItemViewController(interactor: interactor)
+        presenter.viewController = controller
+        return controller
     }
 }
 

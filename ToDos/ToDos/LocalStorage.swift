@@ -16,7 +16,7 @@ protocol StoresLocalData: AnyObject {
     /// Возвращает задачу с `id` или `nil`, если такой задачи нет в хранилище.
     func fetchItem(with id: Int) -> ListItem?
     /// Создаёт и сохраняет новую задачу.
-    func add(_ item: ListItem)
+    func add(_ item: ListItem, completion: @escaping () -> Void)
     /// Обновляет данные существующей задачи.
     func update(_ item: ListItem, completion: @escaping () -> Void)
     /// Удаляет задачу с `id`.
@@ -87,10 +87,11 @@ extension LocalStorage: StoresLocalData {
         )
     }
     
-    func add(_ item: ListItem) {
+    func add(_ item: ListItem, completion: @escaping () -> Void) {
         container.performBackgroundTask { context in
             _ = ListItemLocalStorageEntity(listItem: item, context: context)
             try? context.save()
+            DispatchQueue.main.async { completion() }
         }
     }
     
@@ -157,9 +158,10 @@ final class StoresLocalDataMock: StoresLocalData {
     var addWasCalled = 0
     var addReceivedItem: ListItem?
     
-    func add(_ item: ListItem) {
+    func add(_ item: ListItem, completion: @escaping () -> Void) {
         addWasCalled += 1
         addReceivedItem = item
+        completion()
     }
     
     var updateWasCalled = 0

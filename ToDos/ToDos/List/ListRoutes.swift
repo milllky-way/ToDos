@@ -9,8 +9,8 @@ import UIKit
 
 protocol ListRoutes: AnyObject {
     func navigateToErrorAlert(from viewController: UIViewController, message: String)
-    func navigateToAddItemView(from viewController: UIViewController, itemID id: Int)
-    func navigateToEditItemView(from viewController: UIViewController, item: ListItem)
+    func navigateToAddItemView(from viewController: ListItemViewControllerDelegate, itemID id: Int)
+    func navigateToEditItemView(from viewController: ListItemViewControllerDelegate, item: ListItem)
     func navigateToShareView(from viewController: UIViewController, sharingText text: String)
 }
 
@@ -28,20 +28,20 @@ final class ListRoutesMock: ListRoutes {
     }
     
     var navigateToAddItemViewWasCalled = 0
-    var navigateToAddItemViewReceivedViewController: UIViewController?
+    var navigateToAddItemViewReceivedViewController: ListItemViewControllerDelegate?
     var navigateToAddItemViewReceivedID: Int?
     
-    func navigateToAddItemView(from viewController: UIViewController, itemID id: Int) {
+    func navigateToAddItemView(from viewController: ListItemViewControllerDelegate, itemID id: Int) {
         navigateToAddItemViewWasCalled += 1
         navigateToAddItemViewReceivedViewController = viewController
         navigateToAddItemViewReceivedID = id
     }
     
     var navigateToEditItemViewWasCalled = 0
-    var navigateToEditItemViewReceivedViewController: UIViewController?
+    var navigateToEditItemViewReceivedViewController: ListItemViewControllerDelegate?
     var navigateToEditItemViewReceivedItem: ListItem?
     
-    func navigateToEditItemView(from viewController: UIViewController, item: ListItem) {
+    func navigateToEditItemView(from viewController: ListItemViewControllerDelegate, item: ListItem) {
         navigateToEditItemViewWasCalled += 1
         navigateToEditItemViewReceivedViewController = viewController
         navigateToEditItemViewReceivedItem = item

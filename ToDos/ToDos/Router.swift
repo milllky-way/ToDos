@@ -26,15 +26,17 @@ extension Router: ListRoutes {
         viewController.present(alert, animated: true)
     }
     
-    func navigateToAddItemView(from viewController: UIViewController, itemID id: Int) {
+    func navigateToAddItemView(from viewController: ListItemViewControllerDelegate, itemID id: Int) {
         let addViewController = ListItemFactory().build(with: .add(id: id))
+        addViewController.delegate = viewController
         let navigationController = UINavigationController(rootViewController: addViewController)
         viewController.present(navigationController, animated: true)
     }
     
-    func navigateToEditItemView(from viewController: UIViewController, item: ListItem) {
-        let addViewController = ListItemFactory().build(with: .edit(item: item))
-        let navigationController = UINavigationController(rootViewController: addViewController)
+    func navigateToEditItemView(from viewController: ListItemViewControllerDelegate, item: ListItem) {
+        let editViewController = ListItemFactory().build(with: .edit(item: item))
+        editViewController.delegate = viewController
+        let navigationController = UINavigationController(rootViewController: editViewController)
         viewController.present(navigationController, animated: true)
     }
     

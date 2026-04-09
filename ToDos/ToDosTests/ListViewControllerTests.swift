@@ -93,4 +93,11 @@ final class ListViewControllerTests: XCTestCase {
         XCTAssertEqual(interactorMock.updateSearchResultsWasCalled, 1)
         XCTAssertEqual(interactorMock.updateSearchResultsReceivedRequest, "test query")
     }
+    
+    func testItemDidSave() {
+        // When
+        viewController.itemDidSave()
+        // Then
+        XCTAssertEqual(interactorMock.loadListWasCalled, 2)
+    }
 }

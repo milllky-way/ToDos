@@ -191,9 +191,17 @@ extension ListViewController: UISearchResultsUpdating {
     }
 }
 
+// MARK: - ListItemViewControllerDelegate
+
+extension ListViewController: ListItemViewControllerDelegate {
+    func itemDidSave() {
+        interactor.loadList()
+    }
+}
+
 // MARK: - Mock
 
-final class ListDisplayLogicMock: UIViewController, ListDisplayLogic {
+final class ListViewControllerMock: UIViewController, ListDisplayLogic, ListItemViewControllerDelegate {
     var displayLoadingStateWasCalled = 0
      
     func displayLoadingState() {
@@ -206,5 +214,11 @@ final class ListDisplayLogicMock: UIViewController, ListDisplayLogic {
     func displayList(_ viewModel: ListViewModel) {
         displayListWasCalled += 1
         displayListReceivedViewModel = viewModel
+    }
+    
+    var itemDidSaveWasCalled = 0
+    
+    func itemDidSave() {
+        itemDidSaveWasCalled += 1
     }
 }

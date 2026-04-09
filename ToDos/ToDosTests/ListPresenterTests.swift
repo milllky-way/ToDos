@@ -13,13 +13,13 @@ import XCTest
 final class ListPresenterTests: XCTestCase {
     var presenter: ListPresenter!
     
-    var viewControllerMock: ListDisplayLogicMock!
+    var viewControllerMock: ListViewControllerMock!
     var routerMock: ListRoutesMock!
     
     override func setUp() {
         super.setUp()
         routerMock = ListRoutesMock()
-        viewControllerMock = ListDisplayLogicMock()
+        viewControllerMock = ListViewControllerMock()
         presenter = ListPresenter(router: routerMock)
         presenter.viewController = viewControllerMock
     }
