@@ -17,16 +17,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        let presenter = ListPresenter(router: ListRoutesMock())
-        let interactor = ListInteractor(
-            presenter: presenter,
-            userDefaults: UserDefaults.standard,
-            fetchService: FetchListService(),
-            localStorage: LocalStorage.shared
-        )
-        let listController = ListViewController(interactor: interactor)
-        presenter.viewController = listController
-        let rootViewController = UINavigationController(rootViewController: listController)
+        let rootViewController = UINavigationController(rootViewController: ListFactory().build())
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
     }
